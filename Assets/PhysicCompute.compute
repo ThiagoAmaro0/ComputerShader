@@ -1,0 +1,17 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Start 
+#pragma kernel Update
+
+
+[numthreads(10,1,1)]
+void Start(uint3 id : SV_DispatchThreadID)
+{
+	
+}
+
+[numthreads(10, 1, 1)]
+void Update(uint3 id : SV_DispatchThreadID)
+{
+	
+}
+

@@ -2,16 +2,40 @@
 #pragma kernel Start 
 #pragma kernel Update
 
+float delta, time, lastTime;
+float3 acceleration = 9.8f;
 
-[numthreads(10,1,1)]
+struct Ball {
+	float3 pos;
+	float velocity;
+	float mass;
+	float4 color;
+};
+RWStructuredBuffer<Ball> balls;
+
+float rand(float2 co)
+{
+	return (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 1;
+}
+
+[numthreads(10, 1, 1)]
 void Start(uint3 id : SV_DispatchThreadID)
 {
-	
+	Ball ball = balls[id.x];
+	ball.color = float4(0, 1, 0, 1);
+
+	balls[id.x] = ball;
 }
 
 [numthreads(10, 1, 1)]
 void Update(uint3 id : SV_DispatchThreadID)
 {
-	
+	Ball ball = balls[id.x];
+	delta = time - lastTime;
+	ball.velocity += (acceleration / ball.mass) * delta;
+	ball.pos += float3(0, -ball.velocity, 0) * delta;
+
+	lastTime = time;
+	balls[id.x] = ball;
 }
 
